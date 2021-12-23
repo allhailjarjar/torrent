@@ -1,6 +1,7 @@
 package torrent
 
 import (
+	"constraints"
 	"errors"
 	"net"
 
@@ -120,7 +121,7 @@ func connIsIpv6(nc interface {
 	return rip.To4() == nil && rip.To16() != nil
 }
 
-func clamp(min, value, max int64) int64 {
+func clamp[T constraints.Ordered](min, value, max T) T {
 	if min > max {
 		panic("harumph")
 	}
@@ -133,7 +134,7 @@ func clamp(min, value, max int64) int64 {
 	return value
 }
 
-func max(as ...int64) int64 {
+func max[T constraints.Ordered](as ...T) T {
 	ret := as[0]
 	for _, a := range as[1:] {
 		if a > ret {
@@ -143,17 +144,7 @@ func max(as ...int64) int64 {
 	return ret
 }
 
-func min(as ...int64) int64 {
-	ret := as[0]
-	for _, a := range as[1:] {
-		if a < ret {
-			ret = a
-		}
-	}
-	return ret
-}
-
-func minInt(as ...int) int {
+func min[T constraints.Ordered](as ...T) T {
 	ret := as[0]
 	for _, a := range as[1:] {
 		if a < ret {
